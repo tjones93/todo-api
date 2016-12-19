@@ -73,13 +73,14 @@ app.delete("/todos/:id", function (req, res) {
 
         if (ToDos.length === length - 1) {
             res.json(matchedTodo);
-            res.status(200).send();
+            res.json("Success! ID " + todoID + " was deleted");
             console.log("Success! ID " + todoID + " was deleted");
         } else {
             res.status(400).send();
         }
     } else {
         res.status(404).send();
+        res.json("Failed! Unable to find ID " + todoID + ".");
         console.log("Failed! Unable to find ID " + todoID + ".")
     }
 });
