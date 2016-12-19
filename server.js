@@ -16,7 +16,18 @@ app.get("/", function (req, res) {
 
 //GET /todos 
 app.get("/todos", function (req, res) {
-    res.json(ToDos);
+    var queryParams = req.query;
+    var filteredToDos = ToDos;
+    // if has property and compled === true 
+    //call filtered = _.where (,?)
+    if (queryParams.hasOwnProperty("completed") && queryParams.completed === "true") {
+        filteredToDos = _.where(filteredToDos, {completed: true})
+    }else if (queryParams.hasOwnProperty("completed") && queryParams.completed === "false") {
+        filteredToDos = _.where(filteredToDos, {completed: false})
+    }
+    
+
+    res.json(filteredToDos);
 });
 
 //get /todo/id
@@ -26,6 +37,7 @@ app.get("/todos/:id", function (req, res) {
     var matchedTodo = _.findWhere(ToDos, {
         id: todoID
     });
+
 
     if (matchedTodo) {
         res.json(matchedTodo);
@@ -85,7 +97,7 @@ app.delete("/todos/:id", function (req, res) {
 });
 
 app.put("/todos/:id", function (req, res) {
-    var body = _.pick(req.body, "description", "completed");;
+    var body = _.pick(req.body, "description", "completed");
     var todoID = parseInt(req.params.id, 10);
     var matchedTodo = _.findWhere(ToDos, {
         id: todoID
@@ -111,12 +123,12 @@ app.put("/todos/:id", function (req, res) {
 
     _.extend(matchedTodo, validAttributes);
 
-    if (initialDescription != body.description && initialCompletion != body.completed){
-        res.json("Success: the description field was updated to: \"" + validAttributes.description+ "\" and the completion field was updated to: \"" + validAttributes.completed + "\"");
-        console.log("Success: the description field was updated to: \"" + validAttributes.description+ "\"  and the completion field was updated to: \"" + validAttributes.completed + "\"");
-    }else if (initialDescription != body.description) {
-        res.json("Success: the description field was updated to: \"" + validAttributes.description+ "\" ");
-        console.log("Success: the description field was updated to: \"" + validAttributes.description+ "\" ");
+    if (initialDescription != body.description && initialCompletion != body.completed) {
+        res.json("Success: the description field was updated to: \"" + validAttributes.description + "\" and the completion field was updated to: \"" + validAttributes.completed + "\"");
+        console.log("Success: the description field was updated to: \"" + validAttributes.description + "\"  and the completion field was updated to: \"" + validAttributes.completed + "\"");
+    } else if (initialDescription != body.description) {
+        res.json("Success: the description field was updated to: \"" + validAttributes.description + "\" ");
+        console.log("Success: the description field was updated to: \"" + validAttributes.description + "\" ");
     } else if (initialCompletion != body.completed) {
         res.json("Success: the completion field was updated to: \"" + validAttributes.completed + "\"");
         console.log("Success: the completion field was updated to: \"" + validAttributes.completed + "\"");
