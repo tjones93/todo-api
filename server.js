@@ -12,7 +12,7 @@ var ToDos = [{
     description: "Go to Market",
     completed: false
 }, {
-    id:3, 
+    id: 3,
     description: "Watch TV",
     completed: true
 }];
@@ -22,13 +22,30 @@ app.get("/", function (req, res) {
 });
 
 //GET /todos 
-app.get("/todos", function(req,res){
+app.get("/todos", function (req, res) {
     res.json(ToDos);
 });
+
 //get /todo/id
-//app.get("/todo/:id", function(req,res){
-//    res.json(ToDos(i));
-//})
+
+app.get("/todos/:id", function (req, res) {
+    var todoID = parseInt(req.params.id, 10);
+    var matchedTodo;
+
+    // iterate over array
+    ToDos.forEach(function (todo) {
+        if (todoID === todo.id) {
+            matchedTodo = todo;
+
+        }
+
+    });
+    if (matchedTodo) {
+        res.json(matchedTodo);
+    } else{
+        res.status(404).send();
+}
+});
 
 app.listen(port, function () {
     console.log('Express server started on port ' + port + '!');
