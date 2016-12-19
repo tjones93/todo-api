@@ -7,7 +7,7 @@ app.get("/", function(req, res){
     res.send("Todo API Root");
 });
 
-app.listen(port, function(){
-    console.log("Express listening on port: " + port + "!!!");
-})
+app.listen(PORT, function () {
+	console.log('Express server started on port ' + PORT + '!');
+});
 
