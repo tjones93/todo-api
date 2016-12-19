@@ -21,11 +21,21 @@ app.get("/todos", function (req, res) {
     // if has property and compled === true 
     //call filtered = _.where (,?)
     if (queryParams.hasOwnProperty("completed") && queryParams.completed === "true") {
-        filteredToDos = _.where(filteredToDos, {completed: true})
-    }else if (queryParams.hasOwnProperty("completed") && queryParams.completed === "false") {
-        filteredToDos = _.where(filteredToDos, {completed: false})
+        filteredToDos = _.where(filteredToDos, {
+            completed: true
+        })
+    } else if (queryParams.hasOwnProperty("completed") && queryParams.completed === "false") {
+        filteredToDos = _.where(filteredToDos, {
+            completed: false
+        })
     }
-    
+
+    if (queryParams.hasOwnProperty("q") && queryParams.q.length > 0) {
+        filteredToDos = _.filter(filteredToDos, function(todo){
+            return todo.description.toLowerCase().indexOf(queryParams.q.toLowerCase()) > -1;
+
+        })
+    }
 
     res.json(filteredToDos);
 });
