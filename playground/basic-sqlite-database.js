@@ -5,7 +5,7 @@ var sequelize = new Sequalize(undefined, undefined, undefined, {
 
 });
 
-var Todo = sequelize.define("todo", {
+var Todo = sequelize.define("Todo", {
     description: {
         type: Sequalize.STRING,
         allowNull: false,
@@ -21,17 +21,46 @@ var Todo = sequelize.define("todo", {
 })
 
 sequelize.sync({
-    force: false
+    //force: true
 }).then(function () {
     console.log("Sync Complete.");
 
+}).then(function(){
+    return Todo.findById(1);
+}).then(function(todo){
+    console.log(todo.toJSON());
+}).catch(function(e){
+    console.log(e);
+})
+/*
     Todo.create({
         description: "Take out trash",
-        //completed: false
-    }).then(function (Todo) {
-        console.log("Finished");
-        console.log(Todo);
+    }).then(function (todo) {
+        return Todo.create({
+            description: "Clean the office"
+        });
+    }).then(function(){
+        //return Todo.findById(1)
+        return Todo.findAll({
+            where: {
+                description: {
+                    $like: "%OFFICE%"
+                }
+                
+            }
+        });
+    }).then(function(todos){
+        if (todos) {
+            todos.forEach(function(todo){
+                console.log(JSON.stringify(todo));
+                console.log(todo.toJSON());
+            });
+            
+        }else{
+            console.log("No Todo found");
+        }
     }).catch(function(e){
         console.log(e);
     })
 })
+*/
