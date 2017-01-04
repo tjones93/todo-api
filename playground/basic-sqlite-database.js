@@ -25,13 +25,17 @@ sequelize.sync({
 }).then(function () {
     console.log("Sync Complete.");
 
-}).then(function(){
-    return Todo.findById(1);
-}).then(function(todo){
-    console.log(todo.toJSON());
-}).catch(function(e){
-    console.log(e);
+
+Todo.findById(5).then(function(todo){
+    if (todo){
+        console.log(todo.toJSON());
+    }else{
+        console.log("Naw bro");
+    }
+});
+
 })
+
 /*
     Todo.create({
         description: "Take out trash",
@@ -62,5 +66,12 @@ sequelize.sync({
     }).catch(function(e){
         console.log(e);
     })
+})
+}).then(function(){
+    return Todo.findById(1);
+}).then(function(todo){
+    console.log(todo.toJSON());
+}).catch(function(e){
+    console.log(e);
 })
 */
