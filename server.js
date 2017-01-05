@@ -46,45 +46,32 @@ app.get("/todos", function (req, res) {
 
 app.get("/todos/:id", function (req, res) {
     var todoID = parseInt(req.params.id, 10);
-    var matchedTodo = _.findWhere(ToDos, {
-        id: todoID
-    });
 
+    console.log(todoID);
+    db.todo.findById(todoID).then(function (todo) {
+        if (!!todo) {
+            res.json(todo.toJSON());
+        } else {
+            res.status(404).send()
+            console.log("Unable to find todo item.");
+        }
 
-    if (matchedTodo) {
-        res.json(matchedTodo);
-    } else {
-        res.status(404).send();
-        8
-    }
+    }, function (e) {
+        res.status(500).send();
+    })
+
 });
+
 
 app.post("/todos", function (req, res) {
     var body = _.pick(req.body, "description", "completed");;
 
-    var body = _.pick(req.body, 'description', 'completed');
+    db.todo.create(body).then(function (todo) {
+        res.json(todo.toJSON());
+    }, function (e) {
+        res.status(400).json(e);
+    });
 
-	db.todo.create(body).then(function (todo) {
-		res.json(todo.toJSON());
-	}, function (e) {
-		res.status(400).json(e);
-	});
-
-    /*if (!_.isString(body.description) || !_.isBoolean(body.completed) || body.description.trim().length === 0) {
-        return res.status(400).send();
-    }
-
-    body.id = todoNextId;
-    body.description = body.description.trim();
-
-    ToDos.push(body);
-
-    res.json(body);
-    if (body) {
-        console.log("Success! ID " + body.id + " was created.");
-
-    }
-    todoNextId += 1; */
 });
 
 // delete id based on number 
