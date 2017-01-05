@@ -26,7 +26,7 @@ sequelize.sync({
     console.log("Sync Complete.");
 
 
-Todo.findById(3).then(function(todo){
+/*Todo.findById(1).then(function(todo){
     if (todo){
         console.log(todo.toJSON());
     }else{
@@ -34,9 +34,9 @@ Todo.findById(3).then(function(todo){
     }
 });
 
-})
+})*/
 
-/*
+
     Todo.create({
         description: "Take out trash",
     }).then(function (todo) {
@@ -67,11 +67,3 @@ Todo.findById(3).then(function(todo){
         console.log(e);
     })
 })
-}).then(function(){
-    return Todo.findById(1);
-}).then(function(todo){
-    console.log(todo.toJSON());
-}).catch(function(e){
-    console.log(e);
-})
-*/
