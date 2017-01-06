@@ -78,30 +78,60 @@ app.post('/todos', function (req, res) {
     });
 });
 
+
+
+
 // delete id based on number 
 app.delete("/todos/:id", function (req, res) {
-    var length = 0
+    var length = 0;
     var todoID = parseInt(req.params.id, 10);
-    var matchedTodo = _.findWhere(ToDos, {
-        id: todoID
-    });
-    // var body = req.body
-    if (matchedTodo) {
-        length = ToDos.length
-        ToDos = _.without(ToDos, matchedTodo);
 
-        if (ToDos.length === length - 1) {
-
-            res.json("Success! ID " + todoID + " was deleted");
-            console.log("Success! ID " + todoID + " was deleted");
-        } else {
-            res.json("Failed!");
-        }
-    } else {
-        res.json("Failed! Unable to find ID " + todoID + ".");
-        console.log("Failed! Unable to find ID " + todoID + ".")
-    }
+    db.todo.count({}).then(function (count) {
+        db.todo.destroy({
+            where: {
+                id: todoID
+            }
+        }).catch(function (e) {
+            res.status(500).send();
+        })
+        db.todo.count({}).then(function (secondCount) {
+            if (count === secondCount + 1) {
+                res.status(200).send();
+                console.log("Delete Successful");
+            } else if (count === secondCount) {
+                res.status(404).send();
+                console.log("Failed");
+            }
+        })
+    })
 });
+
+
+
+
+/*var matchedTodo = _.findWhere(ToDos, {
+    id: todoID
+});
+// var body = req.body
+if (matchedTodo) {
+    length = ToDos.length
+    ToDos = _.without(ToDos, matchedTodo);
+
+    if (ToDos.length === length - 1) {
+
+        res.json("Success! ID " + todoID + " was deleted");
+        console.log("Success! ID " + todoID + " was deleted");
+    } else {
+        res.json("Failed!");
+    }
+} else {
+    res.json("Failed! Unable to find ID " + todoID + ".");
+    console.log("Failed! Unable to find ID " + todoID + ".")
+}*/
+
+
+
+
 
 app.put("/todos/:id", function (req, res) {
     var body = _.pick(req.body, "description", "completed");
