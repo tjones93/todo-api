@@ -94,7 +94,7 @@ app.delete("/todos/:id", function (req, res) {
         })
         db.todo.count({}).then(function (secondCount) {
             if (count === secondCount + 1) {
-                res.status(200).send();
+                res.status(204).send();
                 console.log("Delete Successful");
             } else if (count === secondCount) {
                 res.status(404).send();
