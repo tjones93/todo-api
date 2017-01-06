@@ -18,28 +18,33 @@ app.get("/", function (req, res) {
 
 //GET /todos 
 app.get("/todos", function (req, res) {
-    var queryParams = req.query;
-    var filteredToDos = ToDos;
-    // if has property and compled === true 
-    //call filtered = _.where (,?)
-    if (queryParams.hasOwnProperty("completed") && queryParams.completed === "true") {
-        filteredToDos = _.where(filteredToDos, {
-            completed: true
-        })
-    } else if (queryParams.hasOwnProperty("completed") && queryParams.completed === "false") {
-        filteredToDos = _.where(filteredToDos, {
-            completed: false
-        })
+    var query = req.query;
+    var where = {};
+
+
+    if (query.hasOwnProperty("completed") && query.completed === "true") {
+        where.completed = true;
+    }
+    if (query.hasOwnProperty("completed") && query.completed === "false") {
+        where.completed = false;
+    }
+    if (query.hasOwnProperty("q") && query.q.length > 0) {
+        where.description = {
+            $like: "%" + query.q + "%"
+        }
     }
 
-    if (queryParams.hasOwnProperty("q") && queryParams.q.length > 0) {
-        filteredToDos = _.filter(filteredToDos, function (todo) {
-            return todo.description.toLowerCase().indexOf(queryParams.q.toLowerCase()) > -1;
+    console.log({
+        where: where
+    });
+    db.todo.findAll({
+        where: where
+    }).then(function (todo) {
+        res.json(todo);
+    }, function (e) {
+        res.status(500).send();
+    })
 
-        })
-    }
-
-    res.json(filteredToDos);
 });
 
 //get /todo/id
@@ -63,15 +68,14 @@ app.get("/todos/:id", function (req, res) {
 });
 
 
-app.post("/todos", function (req, res) {
-    var body = _.pick(req.body, "description", "completed");;
+app.post('/todos', function (req, res) {
+    var body = _.pick(req.body, 'description', 'completed');
 
     db.todo.create(body).then(function (todo) {
         res.json(todo.toJSON());
     }, function (e) {
         res.status(400).json(e);
     });
-
 });
 
 // delete id based on number 
