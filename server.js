@@ -81,9 +81,7 @@ app.post('/todos', function (req, res) {
 
 
 
-// delete id based on number 
 app.delete("/todos/:id", function (req, res) {
-    var length = 0;
     var todoID = parseInt(req.params.id, 10);
 
     db.todo.count({}).then(function (count) {
